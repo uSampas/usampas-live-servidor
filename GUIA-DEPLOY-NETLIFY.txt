@@ -1,0 +1,59 @@
+uSampas LIVE — VERSÃO NETLIFY 💜
+=================================
+
+ESTE ARQUIVO É O GUIA RÁPIDO. Os arquivos foram separados em duas pastas:
+
+SITE-NETLIFY    → a interface bonita, com HTML/CSS/JavaScript
+SERVIDOR-RENDER → backend Node.js para salas, voz/vídeo e chat
+
+IMPORTANTE: A interface é estática, mas as salas são em tempo real.
+Netlify Drop NÃO executa esse servidor Node.js continuamente.
+
+PASSO 1 — PUBLIQUE A INTERFACE NO NETLIFY
+  1. Entre em https://app.netlify.com/drop
+  2. Arraste a pasta SITE-NETLIFY (a pasta, NÃO só o index.html).
+  3. Copie a URL publicada, exemplo: https://usampas-live.netlify.app
+  4. Por enquanto, o visual funciona; as salas ainda precisam do servidor.
+
+PASSO 2 — PUBLIQUE O SERVIDOR NO RENDER
+  1. Crie um repositório no GitHub e envie o CONTEÚDO de SERVIDOR-RENDER.
+  2. Entre em https://dashboard.render.com/ → New → Web Service.
+  3. Conecte o repositório; use:
+       Build command: npm install
+       Start command: npm start
+       Health check: /api/health
+  4. Em Environment adicione:
+       NODE_ENV = production
+       ALLOWED_ORIGINS = URL_EXATA_DO_SEU_SITE_NETLIFY
+       Exemplo: ALLOWED_ORIGINS = https://usampas-live.netlify.app
+       (sem / no final)
+  5. Publique o Web Service e copie a URL HTTPS gerada.
+     Exemplo: https://usampas-live-backend.onrender.com
+  6. Teste a URL https://SEU_SERVIDOR.onrender.com/api/health.
+     Deve retornar: {"ok":true}
+
+PASSO 3 — CONECTE O SITE AO SERVIDOR
+  Opção mais rápida (não precisa reenviar site):
+    → Abra o site no Netlify.
+    → Clique em "Configurar servidor" (ou na engrenagem discreta).
+    → Cole a URL do Render e clique em "Testar e conectar".
+    → Crie uma sala e copie o convite. O convite leva a URL do servidor.
+
+  Opção RECOMENDADA (automático para TODOS visitantes):
+    → Abra SITE-NETLIFY/config.js com Bloco de Notas.
+    → Altere window.USAMPAS_API_URL = '';
+       para window.USAMPAS_API_URL = 'https://SEU_SERVIDOR.onrender.com';
+    → Salve o arquivo.
+    → Arraste a pasta SITE-NETLIFY atualizada no Netlify para publicar novamente.
+    → A partir daí todas as pessoas poderão acessar e criar salas diretamente.
+
+OBSERVAÇÕES IMPORTANTES
+  • Não arraste SERVIDOR-RENDER para Netlify Drop; Netlify não mantém o processo Node.
+  • O projeto pode iniciar com a câmera e microfone desligados.
+  • A transmissão WebRTC entre redes restritivas pode exigir um servidor TURN.
+  • O servidor guarda salas e chat na memória; elas somem se ele reiniciar.
+  • Para mais de uma instância, um banco/serviço de sinalização é necessário.
+  • Serviços de hospedagem podem hibernar, ter limites ou alterar seus planos.
+  • Em Render, variável ALLOWED_ORIGINS aceita múltiplos domínios separados por vírgula.
+
+FEITO PARA uSampas — Identidade roxo neon, branco e preto.
